@@ -28,6 +28,6 @@ RUN apk add --update curl ca-certificates openssl && \
 
 WORKDIR /srv/minecraft
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./start.sh /start.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/bin/ash", "/start.sh"]
