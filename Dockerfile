@@ -26,7 +26,12 @@ RUN apk add --update curl ca-certificates openssl && \
     cd /opt/jre/lib/ && rm -rf ext/jfxrt.jar jfxswt.jar javafx.properties font* && \
     rm /tmp/* /var/cache/apk/*
 
-WORKDIR /srv/minecraft
+RUN adduser -D -h /home/container container
+
+USER container
+ENV  HOME /home/container
+
+WORKDIR /home/container
 
 COPY ./start.sh /start.sh
 

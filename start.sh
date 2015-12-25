@@ -7,18 +7,22 @@ else
   REQ_VERSION=$LATEST_VERSION
 fi
 
-FILE=/srv/minecraft/minecraft_server.$REQ_VERSION.jar
+FILE=/home/container/server.jar
 
 if [ -f $FILE ]; then
-   echo "Already minecraft_server version $REQ_VERSION no change needed"
+   echo "A server.jar file already exists in this location, not downloading a new one."
 else
-   rm /srv/minecraft/minecraft_server.*.jar
-   curl https://s3.amazonaws.com/Minecraft.Download/versions/$REQ_VERSION/minecraft_server.$REQ_VERSION.jar -o /srv/minecraft/minecraft_server.$REQ_VERSION.jar
+   curl https://s3.amazonaws.com/Minecraft.Download/versions/$REQ_VERSION/minecraft_server.$REQ_VERSION.jar -o server.jar
 fi
 
+cd /home/container
+env
+
 if [ $OPTS  ]; then
-   OPTS=`echo $OPTS | sed -e 's/__/ /g'`
-   java -jar $OPTS /srv/minecraft/minecraft_server.$REQ_VERSION.jar
+    OPTS=`echo $OPTS | sed -e 's/__/ /g'`
+    echo "$ java -jar $OPTS server.jar"
+    java -jar $OPTS server.jar
 else
-   java -jar /srv/minecraft/minecraft_server.$REQ_VERSION.jar
+    echo "$ java -jar server.jar"
+    java -jar server.jar
 fi
