@@ -19,8 +19,7 @@ cd /home/container
 env
 
 if [ $OPTS  ]; then
-    OPTS=`echo $OPTS | sed -e 's/__/ /g'`
-    echo "$ java -jar $OPTS server.jar"
+    echo "$ java $OPTS -jar server.jar"
     java -jar $OPTS server.jar
 else
     echo "$ java -jar server.jar"
