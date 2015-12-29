@@ -16,12 +16,11 @@ else
 fi
 
 cd /home/container
-env
 
-if [ $OPTS  ]; then
-    echo "$ java $OPTS -jar server.jar"
-    java -jar $OPTS server.jar
-else
+if [ -z "$STARTUP"  ]; then
     echo "$ java -jar server.jar"
     java -jar server.jar
+else
+    echo "$ java $STARTUP"
+    java $STARTUP
 fi
