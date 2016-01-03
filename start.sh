@@ -21,6 +21,7 @@ if [ -z "$STARTUP"  ]; then
     echo "$ java -jar server.jar"
     java -jar server.jar
 else
-    echo "$ java $STARTUP"
-    java $STARTUP
+    MODIFIED_STARTUP=`echo $STARTUP | perl -pe 's@{{(.*?)}}@$ENV{$1}@g'`
+    echo "$ java $MODIFIED_STARTUP"
+    java $MODIFIED_STARTUP
 fi
