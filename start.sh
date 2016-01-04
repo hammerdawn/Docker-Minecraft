@@ -1,7 +1,7 @@
 #!/bin/ash
 LATEST_VERSION=`curl -s https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | grep -o "[[:digit:]]\.[0-9]*\.[0-9]" | head -n 1`
 
-if [ -z "$VANILLA_VERSION" ] || [ "$VANILLA_VERSION" -eq "latest" ]; then
+if [ -z "$VANILLA_VERSION" ] || [ "$VANILLA_VERSION" == "latest" ]; then
   DL_VERSION=$LATEST_VERSION
 else
   DL_VERSION=$VANILLA_VERSION
@@ -16,7 +16,8 @@ CHK_FILE="/home/container/${SERVER_JARFILE}"
 if [ -f $CHK_FILE ]; then
    echo "A {$SERVER_JARFILE} file already exists in this location, not downloading a new one."
 else
-   curl https://s3.amazonaws.com/Minecraft.Download/versions/$DL_VERSION/minecraft_server.$DL_VERSION.jar -o server.jar
+   echo "$ curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/$DL_VERSION/minecraft_server.$DL_VERSION.jar -o ${SERVER_JARFILE}"
+   curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/$DL_VERSION/minecraft_server.$DL_VERSION.jar -o ${SERVER_JARFILE}
 fi
 
 cd /home/container
