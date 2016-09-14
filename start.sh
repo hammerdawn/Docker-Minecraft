@@ -14,10 +14,10 @@ fi
 CHK_FILE="/home/container/${SERVER_JARFILE}"
 
 if [ -f $CHK_FILE ]; then
-   echo "A {$SERVER_JARFILE} file already exists in this location, not downloading a new one."
+   echo "A ${SERVER_JARFILE} file already exists in this location, not downloading a new one."
 else
-   echo "$ curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/$DL_VERSION/minecraft_server.$DL_VERSION.jar -o ${SERVER_JARFILE}"
-   curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/$DL_VERSION/minecraft_server.$DL_VERSION.jar -o ${SERVER_JARFILE}
+   echo "$ curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/${DL_VERSION}/minecraft_server.${DL_VERSION}.jar -o ${SERVER_JARFILE}"
+   curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/${DL_VERSION}/minecraft_server.${DL_VERSION}.jar -o ${SERVER_JARFILE}
 fi
 
 cd /home/container
@@ -26,7 +26,7 @@ if [ -z "$STARTUP"  ]; then
     echo "$ java -jar server.jar"
     java -jar ${SERVER_JARFILE}
 else
-    MODIFIED_STARTUP=`echo $STARTUP | perl -pe 's@{{(.*?)}}@$ENV{$1}@g'`
-    echo "$ java $MODIFIED_STARTUP"
-    java $MODIFIED_STARTUP
+    MODIFIED_STARTUP=`echo ${STARTUP} | perl -pe 's@\{\{(.*?)\}\}@$ENV{$1}@g'`
+    echo "$ java ${MODIFIED_STARTUP}"
+    java ${MODIFIED_STARTUP}
 fi
