@@ -1,30 +1,37 @@
 #!/bin/ash
-LATEST_VERSION=`curl -s https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | grep -o "[[:digit:]]\.[0-9]*\.[0-9]" | head -n 1`
-
-if [ -z "$VANILLA_VERSION" ] || [ "$VANILLA_VERSION" == "latest" ]; then
-  DL_VERSION=$LATEST_VERSION
-else
-  DL_VERSION=$VANILLA_VERSION
-fi
-
+# Handles running Spigot Servers
 if [ -z "$SERVER_JARFILE" ]; then
     SERVER_JARFILE="server.jar"
 fi
 
+cd /home/container
 CHK_FILE="/home/container/${SERVER_JARFILE}"
 
 if [ -f $CHK_FILE ]; then
    echo "A {$SERVER_JARFILE} file already exists in this location, not downloading a new one."
 else
-   echo "$ curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/$DL_VERSION/minecraft_server.$DL_VERSION.jar -o ${SERVER_JARFILE}"
-   curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/$DL_VERSION/minecraft_server.$DL_VERSION.jar -o ${SERVER_JARFILE}
+    if [ -z "$DL_PATH" ] || [ "$DL_PATH" == "build" ]; then
+        echo "Building Spigot... This could take awhile."
+
+        cd /tmp
+        curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+        git config --global --unset core.autocrlf
+        java -jar BuildTools.jar --rev {$DL_VERSION}
+
+        cp /tmp/spigot-*.jar /home/container/{$SERVER_JARFILE}
+        cd /home/container
+    else
+        # Download the file
+        MODIFIED_DL_PATH=`echo $DL_PATH | perl -pe 's@{{(.*?)}}@$ENV{$1}@g'`
+        echo "$ curl --progress-bar -L -o {$SERVER_JARFILE} {$MODIFIED_DL_PATH}"
+        curl --progress-bar -L -o {$SERVER_JARFILE} {$MODIFIED_DL_PATH}
+    fi
 fi
 
 cd /home/container
 
 if [ -z "$STARTUP"  ]; then
-    echo "$ java -jar server.jar"
-    java -jar ${SERVER_JARFILE}
+    echo "error: no startup parameters have been set for this container"
 else
     MODIFIED_STARTUP=`echo $STARTUP | perl -pe 's@{{(.*?)}}@$ENV{$1}@g'`
     echo "$ java $MODIFIED_STARTUP"
