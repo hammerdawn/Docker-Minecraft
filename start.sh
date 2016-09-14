@@ -14,7 +14,7 @@ else
         echo "Building Spigot... This could take awhile."
 
         cd /tmp
-        curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+        curl -sS -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
         git config --global --unset core.autocrlf
         java -jar BuildTools.jar --rev ${DL_VERSION}
 
@@ -23,8 +23,8 @@ else
     else
         # Download the file
         MODIFIED_DL_PATH=`echo ${DL_PATH} | perl -pe 's@\{\{(.*?)\}\}@$ENV{$1}@g'`
-        echo "$ curl -L -o ${SERVER_JARFILE} ${MODIFIED_DL_PATH}"
-        curl -L -o ${SERVER_JARFILE} ${MODIFIED_DL_PATH}
+        echo "$ curl -sS -L -o ${SERVER_JARFILE} ${MODIFIED_DL_PATH}"
+        curl -sS -L -o ${SERVER_JARFILE} ${MODIFIED_DL_PATH}
     fi
 fi
 
