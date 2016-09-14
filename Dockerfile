@@ -5,7 +5,7 @@ MAINTAINER Dane Everitt <dane+docker@daneeveritt.com>
 
 RUN apk update
 RUN apk upgrade
-RUN apk add --update curl ca-certificates openssl git tar
+RUN apk add --update curl ca-certificates openssl git tar perl
 RUN adduser -D -h /home/container container
 
 USER container
