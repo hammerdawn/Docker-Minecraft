@@ -1,6 +1,6 @@
 #!/bin/ash
 sleep 3
-CHK_FILE="/home/container/${SERVER_JAR}"
+CHK_FILE="/home/container/${SERVER_JARFILE}"
 
 cd /home/container
 if [ -f $CHK_FILE ]; then
