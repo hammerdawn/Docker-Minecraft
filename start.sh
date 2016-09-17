@@ -1,30 +1,24 @@
 #!/bin/ash
-LATEST_VERSION=`curl -s https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | grep -o "[[:digit:]]\.[0-9]*\.[0-9]" | head -n 1`
-
-if [ -z "$VANILLA_VERSION" ] || [ "$VANILLA_VERSION" == "latest" ]; then
-  DL_VERSION=$LATEST_VERSION
-else
-  DL_VERSION=$VANILLA_VERSION
-fi
-
-if [ -z "$SERVER_JARFILE" ]; then
-    SERVER_JARFILE="server.jar"
-fi
-
-CHK_FILE="/home/container/${SERVER_JARFILE}"
-
-if [ -f $CHK_FILE ]; then
-   echo "A ${SERVER_JARFILE} file already exists in this location, not downloading a new one."
-else
-   echo "$ curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/${DL_VERSION}/minecraft_server.${DL_VERSION}.jar -o ${SERVER_JARFILE}"
-   curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/${DL_VERSION}/minecraft_server.${DL_VERSION}.jar -o ${SERVER_JARFILE}
-fi
+sleep 3
+CHK_FILE="/home/container/${SERVER_JAR}"
 
 cd /home/container
+if [ -f $CHK_FILE ]; then
+   echo "A ${SERVER_JAR} file already exists in this location, not downloading a new one."
+else
+    if [ ${BUNGEE_VERSION} == "latest" ]; then
+        DL_PATH=http://ci.md-5.net/job/BungeeCord/lastSuccessfulBuild/artifact/bootstrap/target/BungeeCord.jar
+    else
+        DL_PATH=http://ci.md-5.net/job/BungeeCord/${BUNGEE_VERSION}/artifact/bootstrap/target/BungeeCord.jar
+    fi
+
+    echo "> curl -sSL ${DL_PATH} -o ${SERVER_JAR}"
+    curl -sSL ${DL_PATH} -o ${SERVER_JAR}
+fi
 
 if [ -z "$STARTUP"  ]; then
-    echo "$ java -jar server.jar"
-    java -jar ${SERVER_JARFILE}
+    echo "$ java -jar ${SERVER_JAR}"
+    java -jar ${SERVER_JAR}
 else
     MODIFIED_STARTUP=`echo ${STARTUP} | perl -pe 's@\{\{(.*?)\}\}@$ENV{$1}@g'`
     echo "$ java ${MODIFIED_STARTUP}"
