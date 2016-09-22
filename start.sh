@@ -1,8 +1,6 @@
 #!/bin/ash
 # Handles running Spigot Servers
-if [ -z "$SERVER_JARFILE" ]; then
-    SERVER_JARFILE="server.jar"
-fi
+sleep 3
 
 cd /home/container
 CHK_FILE="/home/container/${SERVER_JARFILE}"
