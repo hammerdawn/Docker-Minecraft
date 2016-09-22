@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 # Handles running Spigot Servers
 sleep 3
 
