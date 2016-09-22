@@ -5,7 +5,7 @@ MAINTAINER Dane Everitt <dane+docker@daneeveritt.com>
 
 RUN apk update
 RUN apk upgrade
-RUN apk add --update curl ca-certificates openssl git tar perl
+RUN apk add --update curl ca-certificates openssl git tar perl bash && rm -rf /var/cache/apk/*
 RUN adduser -D -h /home/container container
 
 USER container
@@ -15,4 +15,4 @@ WORKDIR /home/container
 
 COPY ./start.sh /start.sh
 
-CMD ["/bin/ash", "/start.sh"]
+CMD ["/bin/bash", "/start.sh"]
