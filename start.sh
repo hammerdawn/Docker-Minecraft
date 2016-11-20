@@ -11,12 +11,17 @@ else
     if [ -z "$DL_PATH" ] || [ "$DL_PATH" == "build" ]; then
         echo "Building Spigot... This could take awhile."
 
-        cd /tmp
+        mkdir -p /home/container/.tmp-build
+        cd /home/container/.tmp-build
         curl -sS -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
         git config --global --unset core.autocrlf
         java -jar BuildTools.jar --rev ${DL_VERSION}
 
-        cp /tmp/spigot-*.jar /home/container/${SERVER_JARFILE}
+        cp /home/container/.tmp-build/spigot-*.jar /home/container/${SERVER_JARFILE}
+
+        if [ $? -eq 0 ]; then
+            rm -rf /home/container/.tmp-build
+        fi
         cd /home/container
     else
         # Download the file
