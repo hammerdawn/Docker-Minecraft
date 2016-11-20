@@ -1,5 +1,5 @@
 # Minimal Minecraft Docker container for Pterodactyl Panel
-FROM openjdk:8-jre-alpine
+FROM frolvlad/alpine-oraclejdk8:cleaned
 
 MAINTAINER Michael Parker, <parkervcp+docker@gmail.com>
 
@@ -9,6 +9,7 @@ RUN apk update \
     && adduser -D -h /home/container container
 
 USER container
+ENV  USER container
 ENV  HOME /home/container
 
 WORKDIR /home/container
