@@ -1,5 +1,5 @@
 #!/bin/ash
-LATEST_VERSION=`curl -s https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | grep -o "[[:digit:]]\.[0-9]*\.[0-9]" | head -n 1`
+LATEST_VERSION=`curl -sSL https://launchermeta.mojang.com/mc/game/version_manifest.json | jq -r '.latest.release'`
 
 if [ -z "$VANILLA_VERSION" ] || [ "$VANILLA_VERSION" == "latest" ]; then
   DL_VERSION=$LATEST_VERSION
