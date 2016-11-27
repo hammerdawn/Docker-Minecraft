@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 LATEST_VERSION=`curl -sSL https://launchermeta.mojang.com/mc/game/version_manifest.json | jq -r '.latest.release'`
 
 if [ -z "$VANILLA_VERSION" ] || [ "$VANILLA_VERSION" == "latest" ]; then
@@ -11,11 +11,13 @@ if [ -z "$SERVER_JARFILE" ]; then
     SERVER_JARFILE="server.jar"
 fi
 
-CHK_FILE="/home/container/${SERVER_JARFILE}"
+CHK_VERSION_FILE="/home/container/version.txt"
+CHK_SERVER_FILE="/home/container/${SERVER_JARFILE}"
 
-if [ -f $CHK_FILE ]; then
+if [ -f $CHK_SERVER_FILE ] && [ -f $CHK_VERSION_FILE ] && [ $(< $CHK_VERSION_FILE) == "$DL_VERSION" ]; then
    echo "A ${SERVER_JARFILE} file already exists in this location, not downloading a new one."
 else
+   echo "$DL_VERSION" > $CHK_VERSION_FILE;
    echo "$ curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/${DL_VERSION}/minecraft_server.${DL_VERSION}.jar -o ${SERVER_JARFILE}"
    curl -sS https://s3.amazonaws.com/Minecraft.Download/versions/${DL_VERSION}/minecraft_server.${DL_VERSION}.jar -o ${SERVER_JARFILE}
 fi

@@ -5,7 +5,7 @@ MAINTAINER Michael Parker, <parkervcp+docker@gmail.com>
 
 RUN apk update \
     && apk upgrade \
-    && apk add --no-cache --update curl jq ca-certificates openssl perl \
+    && apk add --no-cache --update bash curl jq ca-certificates openssl perl \
     && adduser -D -h /home/container container
 
 USER container
@@ -15,4 +15,4 @@ WORKDIR /home/container
 
 COPY ./start.sh /start.sh
 
-CMD ["/bin/ash", "/start.sh"]
+CMD ["/bin/bash", "/start.sh"]
